@@ -16,6 +16,7 @@ from apiclient.discovery import build as google_build
 from multiprocessing.pool import ThreadPool
 from crawler import save_images, purify
 
+PARALLEL_THREADS = 4
 CX_KEY = 'YOUR_CX_HERE' # get it from https://developers.google.com/custom-search/ after creating Custom Search Engine
 ''' after creating engine enable image search '''
 
@@ -57,16 +58,16 @@ def save_cse_google_images(query, save_dir = 'crawled/API_googled/', min_width =
     rdf = pd.DataFrame(ranks, columns = ['File name', 'Score'])
     rdf.to_csv(save_dir + sub_dir + '/ranks.csv', index=False)
     
-def main(file_ = 'newnames.csv'):
-    people = pd.read_csv(file_, names=['Name'])
-    people = list(people.Name.values)
+def main(file_ = 'images.csv'):
+    queries = pd.read_csv(file_, names=['Name'])
+    queries = list(queries.Name.values)
 
-    def generate_data(people):
-        for person in people:
-            yield person
+    def generate_data(queries):
+        for query in queries:
+            yield query
 
-    iterable = generate_data(people)
-    pool = ThreadPool(4)
+    iterable = generate_data(queries)
+    pool = ThreadPool(PARALLEL_THREADS)
     pool.map(save_cse_google_images, iterable)
     pool.close()
 

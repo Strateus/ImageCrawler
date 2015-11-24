@@ -61,15 +61,15 @@ def save_bing_images(query, save_dir = 'crawled/binged/', min_width = 80, min_he
     rdf = pd.DataFrame(ranks, columns = ['File name', 'Score'])
     rdf.to_csv(save_dir + sub_dir + '/ranks.csv', index=False)
 
-def main(file_ = 'newnames.csv'):
-    people = pd.read_csv(file_, names=['Name'])
-    people = list(people.Name.values)
+def main(file_ = 'images.csv'):
+    queries = pd.read_csv(file_, names=['Name'])
+    queries = list(queries.Name.values)
 
-    def generate_data(people):
-        for person in people:
-            yield person
+    def generate_data(queries):
+        for query in queries:
+            yield query
 
-    iterable = generate_data(people)
+    iterable = generate_data(queries)
     pool = ThreadPool(PARALLEL_THREADS)
     pool.map(save_bing_images, iterable)
     pool.close()
