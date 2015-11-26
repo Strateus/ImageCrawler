@@ -3,6 +3,9 @@
 Created on Fri Nov 13 23:04:04 2015
 
 @author: Igor A. Stankevich
+
+USE WITH CAUTION!
+Its an old and free API version and sometimes with alot of requests you may get blocked by Google
 """
 
 import urllib2, json, os, socket
